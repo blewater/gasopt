@@ -49,7 +49,7 @@ contract GasContract {
     }
 
     function addToWhitelist(address _userAddrs, uint256 _tier) external {
-        if (_tier >= 255 || !checkForAdmin(msg.sender)) {
+        if (_tier > 255 || !checkForAdmin(msg.sender)) {
             revert("");
         }
         emit AddedToWhitelist(_userAddrs, _tier);
