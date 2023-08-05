@@ -24,15 +24,6 @@ contract GasContract {
         administrators[4] = owner;
     }
 
-    function checkForAdmin(address u) internal view returns (bool) {
-        for (uint i = 0; i < 5; i++) {
-            if (administrators[i] == u) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     function balanceOf(address) external pure returns (uint256 userBal) {
         assembly { userBal := 1000000000 }
     }
@@ -50,11 +41,26 @@ contract GasContract {
         }
     }        
 
-    function addToWhitelist(address _userAddrs, uint256 _tier) external {
-        if (_tier > 255 || !checkForAdmin(msg.sender)) {
-            revert("");
+    function addToWhitelist(address user, uint256 _tier) external {
+        address sender = msg.sender;
+        assembly {
+            if gt(_tier, 255) {
+                revert(0, 0)
+            }
+
+            let found := 0
+            for { let i := 0 } lt(i, 5) { i := add(i, 1) } {
+                if eq(sload(add(administrators.slot, i)), sender) {
+                    found := 1
+                    break
+                }
+            }
+            if iszero(found) {
+                revert(0, 0)
+            }
         }
-        emit AddedToWhitelist(_userAddrs, _tier);
+        
+        emit AddedToWhitelist(user, _tier);
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
