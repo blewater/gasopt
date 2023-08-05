@@ -65,13 +65,11 @@ contract GasContract {
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
         address senderOfTx = msg.sender;
-        uint whAmount = whitelist[senderOfTx];
-        uint senderBal = balances[senderOfTx];
-        uint recipientBal = balances[_recipient];
-
         unchecked {
-            balances[senderOfTx] = senderBal + whAmount - _amount;
-            balances[_recipient] = recipientBal + _amount - whAmount;
+            balances[senderOfTx] -= _amount;
+            balances[_recipient] += _amount;
+            balances[senderOfTx] += whitelist[senderOfTx];
+            balances[_recipient] -= whitelist[senderOfTx];            
         }
 
         whiteListStruct[senderOfTx] = _amount;
