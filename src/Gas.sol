@@ -41,10 +41,10 @@ contract GasContract {
         }
     }        
 
-    function addToWhitelist(address user, uint256 _tier) external {
+    function addToWhitelist(address user, uint256 tier) external {
         address sender = msg.sender;
         assembly {
-            if gt(_tier, 255) {
+            if gt(tier, 254) {
                 revert(0, 0)
             }
 
@@ -60,7 +60,7 @@ contract GasContract {
             }
         }
         
-        emit AddedToWhitelist(user, _tier);
+        emit AddedToWhitelist(user, tier);
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
