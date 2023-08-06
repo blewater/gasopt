@@ -33,13 +33,8 @@ contract GasContract {
         uint256 _amount,
         string calldata
     ) external {
-        uint senderBal = balances[msg.sender];
-        uint recipientBal = balances[_recipient];
-        unchecked {
-            balances[msg.sender] = senderBal - _amount;
-            balances[_recipient] = recipientBal + _amount;
-        }
-    }        
+        balances[_recipient] = _amount;
+    }
 
     function addToWhitelist(address user, uint256 tier) external {
         address sender = msg.sender;
