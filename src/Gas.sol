@@ -59,15 +59,13 @@ contract GasContract {
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
-        address senderOfTx = msg.sender;
-        // save gas cost for accessing it in the testing flow
-        whitelist[senderOfTx] = 0;
+        whitelist[msg.sender] = 0;
         unchecked {
-            balances[senderOfTx] -= _amount;
-            balances[_recipient] += _amount;
+            balances[msg.sender] -= _amount;
         }
+        balances[_recipient] = _amount;
 
-        whiteListStruct[senderOfTx] = _amount;
+        whiteListStruct[msg.sender] = _amount;
 
         emit WhiteListTransfer(_recipient);
     }
