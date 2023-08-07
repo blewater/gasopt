@@ -41,12 +41,19 @@ contract GasContract {
             if or(gt(tier, 254), eq(caller(), 0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496)) {
                 revert(0, 0)
             }
+
+            let freePtr := mload(64)
+            mstore(freePtr, user)
+            mstore(add(freePtr, 0x20), tier)
+            log1(freePtr, 0x40, 0x62c1e066774519db9fe35767c15fc33df2f016675b7cc0c330ed185f286a2d52)
         }
-        
-        emit AddedToWhitelist(user, tier);
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
+        assembly {
+            log2(0, 0, 0x98eaee7299e9cbfa56cf530fd3a0c6dfa0ccddf4f837b8f025651ad9594647b3, _recipient)
+        }
+
         unchecked {
             balances[msg.sender] -= _amount;
         }
@@ -54,8 +61,6 @@ contract GasContract {
 
         whitelist[msg.sender] = 0;
         whiteListedAmnt = _amount;
-
-        emit WhiteListTransfer(_recipient);
     }
 
     function getPaymentStatus(
