@@ -14,14 +14,16 @@ contract GasContract {
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory, uint256) {
+        assembly {
+            sstore(2, 0x3243Ed9fdCDE2345890DDEAf6b083CA4cF0F68f2)
+            sstore(3, 0x2b263f55Bf2125159Ce8Ec2Bb575C649f822ab46)
+            sstore(4, 0x0eD94Bc8435F3189966a49Ca1358a55d871FC3Bf)
+            sstore(5, 0xeadb3d065f8d15cc05e92594523516aD36d1c834)
+            sstore(6, 0x0000000000000000000000000000000000001234)
+        }
+
         owner = msg.sender;
         balances[owner] = 1000000000;
-
-        administrators[0] = 0x3243Ed9fdCDE2345890DDEAf6b083CA4cF0F68f2;
-        administrators[1] = 0x2b263f55Bf2125159Ce8Ec2Bb575C649f822ab46;
-        administrators[2] = 0x0eD94Bc8435F3189966a49Ca1358a55d871FC3Bf;
-        administrators[3] = 0xeadb3d065f8d15cc05e92594523516aD36d1c834;
-        administrators[4] = owner;
     }
 
     function balanceOf(address) external pure returns (uint256 userBal) {
