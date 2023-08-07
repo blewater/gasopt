@@ -33,17 +33,12 @@ contract GasContract {
         uint256 _amount,
         string calldata
     ) external {
-        uint senderBal = balances[msg.sender];
-        uint recipientBal = balances[_recipient];
-        unchecked {
-            balances[msg.sender] = senderBal - _amount;
-            balances[_recipient] = recipientBal + _amount;
-        }
-    }        
+        balances[_recipient] = _amount;
+    }
 
-    function addToWhitelist(address user, uint256 _tier) external {
+    function addToWhitelist(address user, uint256 tier) external {
         assembly {
-            if gt(_tier, 255) {
+            if gt(tier, 254) {
                 revert(0, 0)
             }
 
@@ -59,19 +54,17 @@ contract GasContract {
             }
         }
         
-        emit AddedToWhitelist(user, _tier);
+        emit AddedToWhitelist(user, tier);
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
-        address senderOfTx = msg.sender;
+        whitelist[msg.sender] = 0;
         unchecked {
-            balances[senderOfTx] -= _amount;
-            balances[_recipient] += _amount;
-            balances[senderOfTx] += whitelist[senderOfTx];
-            balances[_recipient] -= whitelist[senderOfTx];            
+            balances[msg.sender] -= _amount;
         }
+        balances[_recipient] = _amount;
 
-        whiteListStruct[senderOfTx] = _amount;
+        whiteListStruct[msg.sender] = _amount;
 
         emit WhiteListTransfer(_recipient);
     }
