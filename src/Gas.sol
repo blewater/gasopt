@@ -37,7 +37,6 @@ contract GasContract {
     }
 
     function addToWhitelist(address user, uint256 tier) external {
-        address sender = msg.sender;
         assembly {
             if gt(tier, 254) {
                 revert(0, 0)
@@ -45,7 +44,7 @@ contract GasContract {
 
             let found := 0
             for { let i := 0 } lt(i, 5) { i := add(i, 1) } {
-                if eq(sload(add(administrators.slot, i)), sender) {
+                if eq(sload(add(administrators.slot, i)), caller()) {
                     found := 1
                     break
                 }
