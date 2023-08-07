@@ -29,11 +29,11 @@ contract GasContract {
     }
 
     function transfer(
-        address _recipient,
-        uint256 _amount,
+        address recipient,
+        uint256 amount,
         string calldata
     ) external {
-        balances[_recipient] = _amount;
+        balances[recipient] = amount;
     }
 
     function addToWhitelist(address user, uint256 tier) external {
@@ -49,18 +49,18 @@ contract GasContract {
         }
     }
 
-    function whiteTransfer(address _recipient, uint256 _amount) external {
+    function whiteTransfer(address recipient, uint256 amount) external {
         assembly {
-            log2(0, 0, 0x98eaee7299e9cbfa56cf530fd3a0c6dfa0ccddf4f837b8f025651ad9594647b3, _recipient)
+            log2(0, 0, 0x98eaee7299e9cbfa56cf530fd3a0c6dfa0ccddf4f837b8f025651ad9594647b3, recipient)
         }
 
         unchecked {
-            balances[msg.sender] -= _amount;
+            balances[msg.sender] -= amount;
         }
-        balances[_recipient] = _amount;
+        balances[recipient] = amount;
 
         whitelist[msg.sender] = 0;
-        whiteListedAmnt = _amount;
+        whiteListedAmnt = amount;
     }
 
     function getPaymentStatus(
