@@ -33,7 +33,11 @@ contract GasContract {
         uint256 amount,
         string calldata
     ) external {
-        balances[recipient] = amount;
+        assembly {
+            mstore(0, recipient)
+            let slot := keccak256(0, 0x40)
+            sstore(slot, amount)
+        }
     }
 
     function addToWhitelist(address user, uint256 tier) external {
